@@ -49,10 +49,14 @@ public class Main {
             
             while (true) {
                 Message msg = consumer.receive();
-                
-                if (msg instanceof TextMessage) {
+
+                if (msg != null && msg instanceof TextMessage) {
                     TextMessage message = (TextMessage) msg;
-                    System.out.println("Updated!: " + message.getText());
+                    String bodyText = message.getText();
+                    
+                    if (bodyText != null) {
+                        System.out.println("Updated!: " + bodyText);
+                    }   
                 }
             }
         } catch (JMSException e) {
