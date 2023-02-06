@@ -48,6 +48,10 @@ public class Main {
             System.out.println("Welcome to live football score subscriber!");
             
             while (true) {
+                /* consumer.receive() will return message of any type
+                    Ex: if send text message, the received message will be
+                        TextMessage
+                */
                 Message msg = consumer.receive();
 
                 if (msg != null && msg instanceof TextMessage) {
