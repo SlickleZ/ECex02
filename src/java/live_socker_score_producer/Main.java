@@ -48,7 +48,9 @@ public class Main {
             MessageProducer producer = session.createProducer(null);
             TextMessage message = session.createTextMessage();
             
-            System.out.println("Welcome to live score broadcast!");
+            System.out.println("==================================");
+            System.out.println(" Welcome to live score broadcast!");
+            System.out.println("==================================\n");
             
             while(true) {
                 System.out.print("Enter the live score: ");

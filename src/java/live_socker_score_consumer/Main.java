@@ -5,15 +5,16 @@
  */
 package live_socker_score_consumer;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashSet;
 import javax.annotation.Resource;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
-import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 import javax.jms.Topic;
 
 /**
@@ -30,6 +31,9 @@ public class Main {
     public static void main(String[] args) {
         Destination dest = null;
         Connection connection = null;
+        InputStreamReader inputStreamReader = null;
+        TextListener messageListener = null;
+        char answer = '\0';
         
         try {
             dest = (Destination) topic;
@@ -42,25 +46,24 @@ public class Main {
             connection = connectionFactory.createConnection();
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             MessageConsumer consumer = session.createConsumer(dest);
-            
+            messageListener = new TextListener();
+            consumer.setMessageListener(messageListener);
+
             connection.start();
             
-            System.out.println("Welcome to live football score subscriber!");
+            System.out.println("============================================");
+            System.out.println(" Welcome to live football score subscriber!");
+            System.out.println("============================================\n");
             
-            while (true) {
-                /* consumer.receive() will return message of any type
-                    Ex: if send text message, the received message will be
-                        TextMessage
-                */
-                Message msg = consumer.receive();
+            System.out.println(
+                    "To end program, type Q or q, " + "then <return>");
+            inputStreamReader = new InputStreamReader(System.in);
 
-                if (msg != null && msg instanceof TextMessage) {
-                    TextMessage message = (TextMessage) msg;
-                    String bodyText = message.getText();
-                    
-                    if (bodyText != null) {
-                        System.out.println("Updated!: " + bodyText);
-                    }   
+            while (!((answer == 'q') || (answer == 'Q'))) {
+                try {
+                    answer = (char) inputStreamReader.read();
+                } catch (IOException e) {
+                    System.err.println("I/O exception: " + e.toString());
                 }
             }
         } catch (JMSException e) {
